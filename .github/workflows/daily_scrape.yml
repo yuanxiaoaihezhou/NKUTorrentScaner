@@ -1,11 +1,8 @@
 name: Daily Job
 
 on:
-  # 保持原有的定时触发
   schedule:
     - cron: '0 0 */1 * *'
-  
-  # 新增一个手动触发器
   workflow_dispatch: {}
 
 jobs:
@@ -16,20 +13,30 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      # 新增：安装 Google Chrome 浏览器
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@v1
+
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: '3.x'
       - name: Install dependencies
         run: pip install -r requirements.txt
+
+      # 修改：运行脚本时传入 Chrome 路径
       - name: Run script
         run: python script.py
+        
       - name: Commit changes
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git add .
-          git commit -m "Update data"
+          # 如果没有文件变动，commit会失败，所以我们允许它失败
+          git commit -m "Update data" || echo "No changes to commit"
+          
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
