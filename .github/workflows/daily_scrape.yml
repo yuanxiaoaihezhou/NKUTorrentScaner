@@ -1,13 +1,16 @@
 name: Daily Job
 
 on:
+  # 保持原有的定时触发
   schedule:
-    - cron: '0 0 */4 * *'
+    - cron: '0 0 */1 * *'
+  
+  # 新增一个手动触发器
+  workflow_dispatch: {}
 
 jobs:
   run_script:
     runs-on: ubuntu-latest
-    # 1. 添加权限声明，允许工作流向仓库写入内容
     permissions:
       contents: write
     steps:
@@ -30,5 +33,4 @@ jobs:
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
-          # 2. 使用 GITHUB_TOKEN，而不是你自己的 Secret
           github_token: ${{ secrets.GITHUB_TOKEN }}
