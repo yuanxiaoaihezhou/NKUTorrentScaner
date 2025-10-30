@@ -1,48 +1,30 @@
-name: Daily Scrape and Analyze
+name: Daily Job
 
 on:
-  workflow_dispatch:
   schedule:
-    - cron: '0 1 * * *'
+    - cron: '0 0 */4 * *'
 
 jobs:
-  scrape-and-analyze:
+  run_script:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v5
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
         with:
-          python-version: '3.10'
-
-      # --- 核心改动：安装Chrome和Selenium ---
-      - name: Install Google Chrome
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
-
-      - name: Install Python dependencies
-        run: |
-          python -m pip install --upgrade pip
-          # Selenium是新的核心库
-          pip install requests beautifulsoup4 pandas matplotlib wordcloud jieba selenium webdriver-manager
-
-      - name: Run the scrape and analysis script
-        run: python main.py
-
-      - name: Commit and push results
+          python-version: '3.x'
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run script
+        run: python script.py
+      - name: Commit changes
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git add .
-          if git diff --staged --quiet; then
-            echo "No changes to commit."
-            exit 0
-          fi
-          git commit -m "📊 Daily data analysis for $(date +'%Y-%m-%d')"
-          git push
+          git commit -m "Update data"
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.ACTION }}
