@@ -4,3 +4,4 @@ requests
 cloudscraper
 selenium
 undetected-chromedriver
+distutils
