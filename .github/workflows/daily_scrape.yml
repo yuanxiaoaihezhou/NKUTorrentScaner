@@ -14,18 +14,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # 新增：安装 Google Chrome 浏览器
       - name: Set up Chrome
         uses: browser-actions/setup-chrome@v1
 
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.x'
+          # --- 修改这里 ---
+          # 将 '3.x' 修改为 '3.11' 来确保兼容性
+          python-version: '3.11'
+          # --- 修改结束 ---
+          
       - name: Install dependencies
         run: pip install -r requirements.txt
-
-      # 修改：运行脚本时传入 Chrome 路径
+        
       - name: Run script
         run: python script.py
         
@@ -34,7 +36,6 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git add .
-          # 如果没有文件变动，commit会失败，所以我们允许它失败
           git commit -m "Update data" || echo "No changes to commit"
           
       - name: Push changes
