@@ -1,4 +1,4 @@
- import undetected_chromedriver as uc
+import undetected_chromedriver as uc
 from bs4 import BeautifulSoup
 import pandas as pd
 import ipaddress
