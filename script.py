@@ -5,6 +5,7 @@ import ipaddress
 import datetime
 import time
 import traceback
+import os # 引入 os 模块来读取环境变量
 
 # --- undetected-chromedriver 设置 ---
 print("Setting up browser options...")
@@ -14,11 +15,21 @@ options.add_argument('--no-sandbox')
 options.add_argument('--disable-dev-shm-usage')
 options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
 
+# --- 关键修改 1 ---
+# 从环境变量中获取我们手动安装的 Chrome 路径
+chrome_executable_path = os.environ.get("CHROME_PATH")
+# --- 修改结束 ---
+
 print("Initializing undetected_chromedriver...")
 try:
-    # --- 关键修改 ---
-    # 将驱动版本锁定为 126，与工作流中安装的浏览器版本保持一致
-    driver = uc.Chrome(options=options, use_subprocess=True, version_main=126)
+    # --- 关键修改 2 ---
+    # 使用 browser_executable_path 参数，强制指定浏览器路径
+    driver = uc.Chrome(
+        browser_executable_path=chrome_executable_path,
+        options=options,
+        use_subprocess=True,
+        version_main=126
+    )
     # --- 修改结束 ---
     
     print("Browser initialized successfully.")
@@ -29,6 +40,7 @@ except Exception as e:
     exit()
 # --- 设置结束 ---
 
+# (后续代码无需修改，保持原样)
 # 定义存储数据的变量
 data = []
 # 定义要查询的IP网段

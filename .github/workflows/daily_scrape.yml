@@ -14,9 +14,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # --- 关键修改 ---
-      # 明确指定安装的 Chrome 浏览器版本
+      # --- 关键修改 1 ---
+      # 给这个步骤一个 id，以便引用它的输出
       - name: Set up Chrome
+        id: setup_chrome
         uses: browser-actions/setup-chrome@v1
         with:
           chrome-version: 126
@@ -30,8 +31,13 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
         
+      # --- 关键修改 2 ---
+      # 将安装好的 Chrome 路径作为环境变量传递给 Python 脚本
       - name: Run script
         run: python script.py
+        env:
+          CHROME_PATH: ${{ steps.setup_chrome.outputs.chrome-path }}
+      # --- 修改结束 ---
         
       - name: Commit changes
         run: |
