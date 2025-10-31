@@ -12,13 +12,13 @@ options = uc.ChromeOptions()
 options.add_argument('--headless')
 options.add_argument('--no-sandbox')
 options.add_argument('--disable-dev-shm-usage')
-options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36")
+options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
 
 print("Initializing undetected_chromedriver...")
 try:
     # --- 关键修改 ---
-    # 明确指定 Chrome 的主版本号为 144，以匹配 Actions 环境中安装的浏览器
-    driver = uc.Chrome(options=options, use_subprocess=True, version_main=144)
+    # 将驱动版本锁定为 126，与工作流中安装的浏览器版本保持一致
+    driver = uc.Chrome(options=options, use_subprocess=True, version_main=126)
     # --- 修改结束 ---
     
     print("Browser initialized successfully.")

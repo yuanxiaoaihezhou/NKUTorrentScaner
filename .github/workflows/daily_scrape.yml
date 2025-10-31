@@ -14,16 +14,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      # --- 关键修改 ---
+      # 明确指定安装的 Chrome 浏览器版本
       - name: Set up Chrome
         uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: 126
+      # --- 修改结束 ---
 
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          # --- 修改这里 ---
-          # 将 '3.x' 修改为 '3.11' 来确保兼容性
           python-version: '3.11'
-          # --- 修改结束 ---
           
       - name: Install dependencies
         run: pip install -r requirements.txt
@@ -41,4 +43,4 @@ jobs:
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}  
+          github_token: ${{ secrets.GITHUB_TOKEN }}
